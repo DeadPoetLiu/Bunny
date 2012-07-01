@@ -29,3 +29,6 @@ HEADERS  += \
     icp.h
 
 FORMS    +=
+
+RESOURCES += \
+    bunnies.qrc

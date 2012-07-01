@@ -3,13 +3,14 @@
 #include "glwidget.h"
 #include "window.h"
 #include <QTimer>
+#include <QResource>
 
 Window::Window()
 {
     this->input = new QPointCloud();
-    this->input->loadDataFromPCD("/home/sebastian/Projekte/ICP/assets/bunny_large/bun000.pcd");
+    this->input->loadDataFromPCD(":/bunnies/bun000.pcd");
     this->test = new QPointCloud();
-    this->test->loadDataFromPCD("/home/sebastian/Projekte/ICP/assets/bunny_large/bun000.pcd");
+    this->test->loadDataFromPCD(":/bunnies/bun000.pcd");
     rotate_point_cloud(this->test->data, 0, 0.7, 0);
 
     glWidget = new GLWidget(this->input, this->test);
