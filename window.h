@@ -27,6 +27,7 @@ class Window : public QWidget
 
 public:
     Window();
+    ~Window();
 
 protected:
     void keyPressEvent(QKeyEvent *event);

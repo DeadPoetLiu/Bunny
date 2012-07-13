@@ -2,6 +2,7 @@
 #define ICPTHREAD_H
 
 #include <QThread>
+#include "pointcloud.h"
 
 class QPointCloud;
 
@@ -27,10 +28,14 @@ signals:
     void dummy_transformed();
 public slots:
 
+private slots:
+    void cleanUp();
 private:
     QPointCloud *input;
     QPointCloud *test;
     QPointCloud *dummy;
+    PointCloudPtr saved;
+    PointCloudPtr sample;
     QTextEdit *console;
 };
 

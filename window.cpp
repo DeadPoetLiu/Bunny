@@ -10,7 +10,7 @@ Window::Window()
     this->input = new QPointCloud();
     this->input->loadDataFromPCD(":/bun000.pcd");
     this->test = new QPointCloud();
-    this->test->loadDataFromPCD(":/bun315.pcd");
+    this->test->loadDataFromPCD(":/bun000.pcd");
     rotate_point_cloud(this->test->data, 0, 0.7, 0);
 
     glWidget = new GLWidget(this->input, this->test);
@@ -137,4 +137,8 @@ void Window::enableStartButton()
 {
     if(input->data && test->data)
         startButton->setEnabled(true);
+}
+
+Window::~Window()
+{
 }

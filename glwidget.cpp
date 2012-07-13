@@ -36,10 +36,12 @@ GLWidget::GLWidget(QPointCloud *input, QPointCloud *test, QWidget *parent)
     connect(this, SIGNAL(xRotationChanged(int)), this, SLOT(repaint()));
     connect(this, SIGNAL(yRotationChanged(int)), this, SLOT(repaint()));
     connect(this, SIGNAL(zRotationChanged(int)), this, SLOT(repaint()));
+    connect(this, SIGNAL(destroyed()), icp, SLOT(terminate()), Qt::BlockingQueuedConnection);
 }
 
 GLWidget::~GLWidget()
 {
+
 }
 
 QSize GLWidget::minimumSizeHint() const

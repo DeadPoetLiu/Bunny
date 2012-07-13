@@ -17,6 +17,8 @@ ICPThread::ICPThread(QPointCloud *input, QPointCloud *test, QPointCloud *dummy,
     this->test = test;
     this->dummy = dummy;
     this->console = console;
+
+    connect(this, SIGNAL(terminated()), this, SLOT(cleanUp()));
 }
 
 void ICPThread::run()
@@ -25,10 +27,10 @@ void ICPThread::run()
     float error, min_error = 10;
     unsigned int counter = 0;
     const unsigned int limit = 100;
-    const unsigned int sample_count = 200;
-    PointCloudPtr saved = copy_point_cloud(this->test->data);
+    const unsigned int sample_count = 10;
+    saved = copy_point_cloud(this->test->data);
     dummy->data = copy_point_cloud(this->test->data);
-    PointCloudPtr sample = create_sample_point_cloud(this->test->data, sample_count);
+    sample = create_sample_point_cloud(this->test->data, sample_count);
     initial_alignment(this->input->data, this->test->data);
     while(true) {
         error = align(this->input->data, sample, trans);
@@ -54,4 +56,10 @@ void ICPThread::run()
             counter++;
         }
     }
+}
+
+void ICPThread::cleanUp()
+{
+    free_point_cloud(sample);
+    free_point_cloud(saved);
 }

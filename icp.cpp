@@ -6,6 +6,9 @@
 #include <time.h>
 
 extern "C"
+void find_neighbors_with_cuda(PointCloudPtr input, PointCloudPtr test, uint *neighbors);
+
+extern "C"
 {
 
 void initial_alignment(PointCloudPtr input, PointCloudPtr test)
@@ -63,7 +66,7 @@ float align(PointCloudPtr input, PointCloudPtr test,
     PointCloudPtr sample = test;
     neighbors = (uint*)malloc(sample->point_count * sizeof(uint));
     srand(time(NULL));
-    find_neighbors(input, sample, neighbors);
+    find_neighbors_with_cuda(input, sample, neighbors);
     error = 10;
     calculate_translation(input, sample, neighbors, translation);
     translate_point_cloud(sample, translation);
