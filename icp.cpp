@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <time.h>
 
+#define CUDA 1
+
 extern "C"
 void find_neighbors_with_cuda(PointCloudPtr input, PointCloudPtr test, uint *neighbors);
 
@@ -34,6 +36,7 @@ void find_neighbors(PointCloudPtr input, PointCloudPtr test, uint *neighbors)
         test_y = test->points[i][1];
         test_z = test->points[i][2];
         min_dist = FLT_MAX;
+        dist = 0;
         for(j = 0; j < input->point_count; j++)
         {
             input_x = input->points[j][0];
@@ -66,10 +69,16 @@ float align(PointCloudPtr input, PointCloudPtr test,
     PointCloudPtr sample = test;
     neighbors = (uint*)malloc(sample->point_count * sizeof(uint));
     srand(time(NULL));
-    find_neighbors_with_cuda(input, sample, neighbors);
-    error = 10;
+#if CUDA
+    find_neighbors_with_cuda(input, test, neighbors);
+#else
+    find_neighbors(input, test, neighbors);
+#endif
+    error = error_function(input, sample, neighbors,
+                           theta, phi, psi, translation);
     calculate_translation(input, sample, neighbors, translation);
     translate_point_cloud(sample, translation);
+
     for(i = 0; i < 100; i++) {
         theta = get_random_angle();
         phi = get_random_angle();
@@ -87,7 +96,11 @@ float align(PointCloudPtr input, PointCloudPtr test,
         }
     }
     transform_cloud(sample, best_theta, best_phi, best_phi, best_translation);
-    find_neighbors(input, sample, neighbors);
+#if CUDA
+    find_neighbors_with_cuda(input, test, neighbors);
+#else
+    find_neighbors(input, test, neighbors);
+#endif
     transformation.theta = best_theta;
     transformation.phi = best_phi;
     transformation.psi = best_psi;
@@ -100,7 +113,6 @@ float align(PointCloudPtr input, PointCloudPtr test,
 float get_random_angle()
 {
     float factor = 0;
-    srand(time(NULL));
     if(rand() % 2 == 0)
         factor = -1;
     else

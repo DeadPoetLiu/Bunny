@@ -10,8 +10,9 @@ Window::Window()
     this->input = new QPointCloud();
     this->input->loadDataFromPCD(":/bun000.pcd");
     this->test = new QPointCloud();
-    this->test->loadDataFromPCD(":/bun000.pcd");
-    rotate_point_cloud(this->test->data, 0, 0.7, 0);
+    this->test->loadDataFromPCD(":/bun045.pcd");
+    float trans[3] = {0.5, 0.7, -0.2};
+    translate_point_cloud(this->test->data, trans);
 
     glWidget = new GLWidget(this->input, this->test);
 
@@ -27,6 +28,7 @@ Window::Window()
     testFileDialog = new QFileDialog;
 
     startButton = new QPushButton("Start");
+    startButton->setCheckable(true);
     startButton->setEnabled(false);
 
     timer = new QTimer();
@@ -46,7 +48,7 @@ Window::Window()
     connect(testButton, SIGNAL(clicked()), testFileDialog, SLOT(open()));
     connect(testFileDialog, SIGNAL(fileSelected(QString)), this, SLOT(updateTestLabel(QString)));
     connect(testFileDialog, SIGNAL(fileSelected(QString)), glWidget, SLOT(loadTestCloudFromPCD(QString)));
-    connect(startButton, SIGNAL(clicked()), glWidget, SLOT(doICP()));
+    connect(startButton, SIGNAL(toggled(bool)), glWidget, SLOT(doICP(bool)));
     connect(timer, SIGNAL(timeout()), this, SLOT(enableStartButton()));
 
     timer->start(100);

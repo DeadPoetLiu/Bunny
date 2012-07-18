@@ -36,7 +36,7 @@ GLWidget::GLWidget(QPointCloud *input, QPointCloud *test, QWidget *parent)
     connect(this, SIGNAL(xRotationChanged(int)), this, SLOT(repaint()));
     connect(this, SIGNAL(yRotationChanged(int)), this, SLOT(repaint()));
     connect(this, SIGNAL(zRotationChanged(int)), this, SLOT(repaint()));
-    connect(this, SIGNAL(destroyed()), icp, SLOT(terminate()), Qt::BlockingQueuedConnection);
+    connect(this, SIGNAL(destroyed()), icp, SLOT(terminate()));
 }
 
 GLWidget::~GLWidget()
@@ -119,7 +119,7 @@ void GLWidget::resizeGL(int width, int height)
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(-0.15, 0.15, 0, 0.2, -0.2, 0.3);
+    glOrtho(-0.15, 0.15, 0, 0.2, -0.2, 0.6);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
@@ -154,7 +154,7 @@ void GLWidget::loadTestCloudFromPCD(QString pathToFile)
     test->loadDataFromPCD(pathToFile);
 }
 
-void GLWidget::doICP()
+void GLWidget::doICP(bool start)
 {
     icp->start();
 }

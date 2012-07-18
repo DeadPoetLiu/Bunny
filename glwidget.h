@@ -27,7 +27,7 @@ public slots:
     void setZRotation(int angle);
     void loadInputCloudFromPCD(QString pathToFile);
     void loadTestCloudFromPCD(QString pathToFile);
-    void doICP();
+    void doICP(bool start);
 
 signals:
     void xRotationChanged(int angle);
